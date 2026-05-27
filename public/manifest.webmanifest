@@ -2,19 +2,21 @@
   "name": "Portfolio Journal",
   "short_name": "Journal",
   "description": "Portfolio Journal helps track long-term capital invested across asset categories.",
-  "start_url": "/",
+  "id": "/Portfolio-Journal/",
+  "start_url": "/Portfolio-Journal/",
+  "scope": "/Portfolio-Journal/",
   "display": "standalone",
   "background_color": "#f7f5ef",
   "theme_color": "#f7f5ef",
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/Portfolio-Journal/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/Portfolio-Journal/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
