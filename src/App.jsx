@@ -44,7 +44,7 @@ function App() {
           </header>
         )}
 
-        {activePage === 'dashboard' && <Dashboard total={getTotalCapitalIn(portfolioData)} />}
+        {activePage === 'dashboard' && <Dashboard data={portfolioData} />}
         {activePage === 'stocks' && (
           <StocksAndFunds
             data={portfolioData}
@@ -91,13 +91,31 @@ function getPageTitle(pageId) {
   return 'Dashboard';
 }
 
-function Dashboard({ total }) {
+function Dashboard({ data }) {
+  const total = getTotalCapitalIn(data);
+  const stocksAndFundsTotal = getStocksAndFundsTotal(data);
+  const cryptoTotal = getCryptoCapitalIn(data);
+
   return (
-    <section className="capitalCard" aria-labelledby="total-capital-title">
-      <span className="cardLabel" id="total-capital-title">
-        Total Capital In
-      </span>
-      <strong className="capitalAmount">{formatCurrency(total)}</strong>
+    <section className="dashboardStack" aria-labelledby="total-capital-title">
+      <article className="capitalCard dashboardHero">
+        <span className="cardLabel" id="total-capital-title">
+          Total Capital In
+        </span>
+        <strong className="capitalAmount">{formatCurrency(total)}</strong>
+        <p className="summaryText">A clean snapshot of capital recorded across your portfolio.</p>
+      </article>
+
+      <div className="summaryGrid" aria-label="Portfolio summary">
+        <article className="softCard summaryCard">
+          <span className="cardLabel">Stocks & Funds</span>
+          <strong className="summaryAmount">{formatCurrency(stocksAndFundsTotal)}</strong>
+        </article>
+        <article className="softCard summaryCard">
+          <span className="cardLabel">Crypto</span>
+          <strong className="summaryAmount">{formatCurrency(cryptoTotal)}</strong>
+        </article>
+      </div>
     </section>
   );
 }

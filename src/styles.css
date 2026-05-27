@@ -1,6 +1,19 @@
-﻿:root {
-  color: #1e2522;
-  background: #f7f5ef;
+:root {
+  --ink: #111111;
+  --ink-soft: #303030;
+  --muted: #707070;
+  --muted-light: #989898;
+  --line: #dfdfdf;
+  --line-strong: #c8c8c8;
+  --surface: #ffffff;
+  --surface-soft: #f7f7f7;
+  --surface-muted: #eeeeee;
+  --danger: #9a2f24;
+  --danger-soft: #fff5f3;
+  --shadow-soft: 0 18px 48px rgba(0, 0, 0, 0.06);
+  --shadow-tight: 0 8px 24px rgba(0, 0, 0, 0.08);
+  color: var(--ink);
+  background: #f4f4f4;
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-synthesis: none;
@@ -18,8 +31,8 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(247, 245, 239, 0) 38%),
-    #f7f5ef;
+    linear-gradient(180deg, #ffffff 0, #f5f5f5 240px, #eeeeee 100%),
+    #f4f4f4;
 }
 
 button,
@@ -28,76 +41,135 @@ select {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 .appShell {
   min-height: 100vh;
-  padding: env(safe-area-inset-top) 18px calc(94px + env(safe-area-inset-bottom));
+  padding: env(safe-area-inset-top) 16px calc(104px + env(safe-area-inset-bottom));
 }
 
 .appMain {
-  width: min(100%, 520px);
+  width: min(100%, 560px);
   margin: 0 auto;
 }
 
 .cryptoMain {
-  width: min(100%, 920px);
+  width: min(100%, 960px);
 }
 
 .appHeader {
-  padding: 32px 2px 22px;
+  padding: 34px 2px 24px;
 }
 
 .eyebrow {
-  margin: 0 0 8px;
-  color: #768077;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0;
+  margin: 0 0 9px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 720;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
   text-transform: uppercase;
 }
 
-h1 {
+h1,
+h2,
+h3 {
   margin: 0;
-  color: #1e2522;
-  font-size: 2rem;
-  font-weight: 760;
-  line-height: 1.08;
+  color: var(--ink);
+}
+
+h1 {
+  font-size: 2.35rem;
+  font-weight: 780;
+  line-height: 0.96;
 }
 
 h2 {
-  margin: 0;
-  color: #1e2522;
-  font-size: 1.08rem;
+  font-size: 1.04rem;
   font-weight: 760;
   line-height: 1.2;
 }
 
 h3 {
-  margin: 5px 0 0;
-  color: #1e2522;
   font-size: 1rem;
-  font-weight: 730;
+  font-weight: 740;
   line-height: 1.25;
 }
 
-.contentStack {
+.contentStack,
+.dashboardStack {
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
 .capitalCard,
 .softCard {
-  border: 1px solid rgba(78, 88, 79, 0.12);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: 0 18px 46px rgba(51, 57, 50, 0.08);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--shadow-soft);
 }
 
 .capitalCard {
   display: grid;
-  gap: 16px;
-  min-height: 190px;
-  align-content: center;
-  padding: 28px;
+  gap: 18px;
+  min-height: 200px;
+  align-content: end;
+  padding: 26px;
+}
+
+.dashboardHero {
+  position: relative;
+  overflow: hidden;
+  min-height: 260px;
+  border-color: #d8d8d8;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(242, 242, 242, 0.86)),
+    var(--surface);
+}
+
+.dashboardHero::before {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  width: 88px;
+  height: 1px;
+  background: var(--line-strong);
+  content: "";
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summaryCard {
+  min-height: 126px;
+}
+
+.summaryAmount {
+  display: block;
+  margin-top: 16px;
+  color: var(--ink);
+  font-size: 1.55rem;
+  font-weight: 760;
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.summaryText {
+  max-width: 24rem;
+  margin: -6px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
 }
 
 .compactCapitalCard {
@@ -105,13 +177,13 @@ h3 {
 }
 
 .cryptoCapitalCard {
-  width: min(100%, 520px);
-  min-height: 178px;
+  width: min(100%, 560px);
+  min-height: 190px;
   align-content: stretch;
   justify-self: center;
   justify-items: stretch;
-  gap: 20px;
-  padding: 26px 24px;
+  gap: 22px;
+  padding: 24px;
   text-align: left;
 }
 
@@ -123,62 +195,73 @@ h3 {
 
 .cryptoTitleBlock .eyebrow {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
 }
 
 .cryptoTitleBlock h1 {
-  font-size: 1.65rem;
+  font-size: 2rem;
 }
 
 .cryptoCapitalContent {
   display: grid;
-  gap: 10px;
+  gap: 9px;
   justify-items: center;
   align-self: center;
   text-align: center;
 }
 
 .cryptoCapitalCard .cardLabel {
-  font-size: 1rem;
+  font-size: 0.88rem;
 }
 
 .cryptoCapitalCard .sectionAmount {
   margin-top: 0;
-  font-size: clamp(3rem, 11vw, 4.6rem);
+  font-size: 3.2rem;
   line-height: 0.95;
 }
 
 .softCard {
-  padding: 22px;
+  padding: 20px;
 }
 
 .cardLabel {
   display: block;
-  color: #687269;
-  font-size: 0.94rem;
-  font-weight: 650;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 740;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .capitalAmount {
-  color: #1e2522;
-  font-size: clamp(3.4rem, 20vw, 5.6rem);
-  font-weight: 780;
-  line-height: 0.92;
+  color: var(--ink);
+  font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 0.88;
+  overflow-wrap: anywhere;
 }
 
 .sectionAmount {
   display: block;
-  margin-top: 10px;
-  color: #1e2522;
-  font-size: 2.2rem;
-  font-weight: 760;
-  line-height: 1;
+  margin-top: 12px;
+  color: var(--ink);
+  font-size: 2.35rem;
+  font-weight: 780;
+  letter-spacing: 0;
+  line-height: 0.95;
+  overflow-wrap: anywhere;
 }
 
 .placeholderText {
   margin: 0;
-  color: #687269;
-  font-size: 1rem;
+  padding: 18px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--muted);
+  font-size: 0.95rem;
   line-height: 1.55;
 }
 
@@ -199,7 +282,7 @@ h3 {
 }
 
 .cryptoFormCard {
-  width: min(100%, 520px);
+  width: min(100%, 560px);
   justify-self: center;
 }
 
@@ -208,20 +291,21 @@ h3 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  padding-bottom: 3px;
 }
 
 .fieldGroup,
 .field {
   display: grid;
-  gap: 7px;
-  color: #4f5a52;
-  font-size: 0.9rem;
-  font-weight: 680;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 720;
 }
 
-.field {
-  gap: 8px;
-  color: #687269;
+.fieldGroup span,
+.field span {
+  line-height: 1.2;
 }
 
 .fieldGroup input,
@@ -229,26 +313,41 @@ h3 {
 .field input,
 .field select {
   width: 100%;
-  min-height: 48px;
-  border: 1px solid rgba(78, 88, 79, 0.16);
-  border-radius: 12px;
-  background: #fbfaf7;
-  color: #1e2522;
+  min-height: 50px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  color: var(--ink);
   padding: 0 13px;
-  font-size: 1rem;
+  font-size: 0.98rem;
+  font-weight: 560;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .fieldGroup input::placeholder,
 .field input::placeholder {
-  color: #9aa398;
+  color: var(--muted-light);
+}
+
+.fieldGroup input:hover,
+.fieldGroup select:hover,
+.field input:hover,
+.field select:hover {
+  border-color: var(--line-strong);
+  background: var(--surface);
 }
 
 .fieldGroup input:focus,
 .fieldGroup select:focus,
 .field input:focus,
 .field select:focus {
-  outline: 3px solid rgba(38, 52, 45, 0.18);
-  border-color: rgba(38, 52, 45, 0.34);
+  border-color: #8f8f8f;
+  background: var(--surface);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.06);
+  outline: 0;
 }
 
 .readonlyField {
@@ -256,63 +355,99 @@ h3 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 52px;
-  padding: 12px 14px;
-  border: 1px solid rgba(78, 88, 79, 0.12);
-  border-radius: 12px;
-  background: #f5f3ed;
-  color: #687269;
-  font-size: 0.9rem;
-  font-weight: 680;
+  min-height: 54px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f1f1f1;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 720;
 }
 
 .readonlyField strong {
-  color: #1e2522;
-  font-size: 1.05rem;
+  color: var(--ink);
+  font-size: 1.08rem;
+  font-weight: 760;
+  overflow-wrap: anywhere;
 }
 
 .formError {
   margin: 0;
-  color: #9a3326;
-  font-size: 0.92rem;
+  padding: 11px 12px;
+  border: 1px solid rgba(154, 47, 36, 0.22);
+  border-radius: 10px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 0.9rem;
   font-weight: 650;
   line-height: 1.4;
 }
 
 .primaryButton,
+.secondaryButton,
+.deleteButton {
+  transition:
+    transform 120ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.primaryButton,
 .secondaryButton {
   min-height: 48px;
-  border: 1px solid rgba(78, 88, 79, 0.16);
-  border-radius: 12px;
-  color: #1e2522;
-  font-weight: 680;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  font-size: 0.94rem;
+  font-weight: 730;
 }
 
 .primaryButton {
-  background: #26342d;
+  border-color: var(--ink);
+  background: var(--ink);
   color: #ffffff;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+.primaryButton:hover {
+  background: #2a2a2a;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
 }
 
 .secondaryButton {
-  background: #f9f8f4;
+  background: var(--surface);
+}
+
+.secondaryButton:hover {
+  border-color: var(--line-strong);
+  background: #f2f2f2;
 }
 
 .compactButton {
   min-height: 38px;
-  border-radius: 10px;
-  font-size: 0.86rem;
+  border-radius: 9px;
+  font-size: 0.82rem;
   padding: 0 12px;
 }
 
 .primaryButton:active,
 .secondaryButton:active,
-.deleteButton:active {
+.deleteButton:active,
+.navButton:active {
   transform: translateY(1px);
 }
 
 .recordsSection {
   display: grid;
-  gap: 12px;
+  gap: 13px;
+  margin-top: 2px;
+}
+
+.recordsSection > h2 {
+  padding: 0 2px;
 }
 
 .recordsPage {
@@ -323,10 +458,11 @@ h3 {
   display: flex;
   align-items: center;
   gap: 14px;
+  padding: 10px 0 6px;
 }
 
 .recordsPageHeader h1 {
-  font-size: clamp(1.8rem, 6vw, 2.4rem);
+  font-size: 2rem;
 }
 
 .categoryGroups,
@@ -342,7 +478,7 @@ h3 {
 .categoryGroup,
 .assetGroup {
   display: grid;
-  gap: 14px;
+  gap: 15px;
 }
 
 .assetGroup {
@@ -351,68 +487,74 @@ h3 {
 
 .categoryHeader,
 .assetGroupHeader {
-  display: grid;
-  gap: 6px;
-}
-
-.assetGroupHeader {
-  gap: 5px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 2px;
 }
 
 .categoryHeader h3,
 .assetGroupHeader h3 {
-  margin: 0;
-  font-size: 1.08rem;
+  font-size: 1.05rem;
 }
 
 .assetGroupHeader h3 {
-  font-size: 1.18rem;
+  font-size: 1.15rem;
 }
 
 .categoryTotal,
 .assetGroupHeader span {
-  color: #687269;
-  font-size: 0.94rem;
-  font-weight: 680;
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 720;
+  line-height: 1.35;
+  text-align: right;
 }
 
 .assetGroupHeader span {
-  font-size: 0.92rem;
+  font-size: 0.86rem;
 }
 
 .purchaseTable {
   display: grid;
   gap: 0;
   overflow: hidden;
-  border: 1px solid rgba(78, 88, 79, 0.12);
-  border-radius: 14px;
-  background: #fbfaf7;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
 }
 
 .purchaseHeader,
 .purchaseRow {
   display: grid;
-  grid-template-columns: 4.9rem 4rem minmax(0, 1fr) 3.7rem;
-  gap: 6px;
+  grid-template-columns: 5.25rem 4.6rem minmax(0, 1fr) 4.2rem;
+  gap: 8px;
   align-items: center;
-  padding: 11px 10px;
+  padding: 12px;
 }
 
 .purchaseHeader {
-  background: #f2f0ea;
-  color: #687269;
-  font-size: 0.68rem;
-  font-weight: 760;
+  background: #f3f3f3;
+  color: var(--muted);
+  font-size: 0.67rem;
+  font-weight: 780;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .purchaseRow {
-  color: #1e2522;
-  font-size: 0.78rem;
+  color: var(--ink);
+  font-size: 0.8rem;
+}
+
+.purchaseRow:hover {
+  background: #fafafa;
 }
 
 .purchaseRow + .purchaseRow {
-  border-top: 1px solid rgba(78, 88, 79, 0.1);
+  border-top: 1px solid var(--line);
 }
 
 .purchaseCell {
@@ -421,7 +563,7 @@ h3 {
 }
 
 .purchaseNote {
-  color: #687269;
+  color: var(--muted);
 }
 
 .purchaseAction {
@@ -444,11 +586,11 @@ h3 {
 .mobileTableRow {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 13px;
   padding: 14px;
-  border: 1px solid rgba(78, 88, 79, 0.12);
-  border-radius: 14px;
-  background: #fbfaf7;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
 }
 
 .mobileTableRow div {
@@ -457,18 +599,20 @@ h3 {
 
 .mobileTableRow span {
   display: block;
-  color: #768077;
-  font-size: 0.74rem;
-  font-weight: 740;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 760;
+  letter-spacing: 0.04em;
   line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .mobileTableRow strong {
   display: block;
-  margin-top: 5px;
-  color: #1e2522;
+  margin-top: 6px;
+  color: var(--ink);
   font-size: 0.92rem;
-  font-weight: 680;
+  font-weight: 660;
   line-height: 1.28;
   overflow-wrap: anywhere;
 }
@@ -486,13 +630,18 @@ h3 {
 .deleteButton {
   flex: 0 0 auto;
   min-height: 34px;
-  border: 1px solid rgba(154, 51, 38, 0.18);
-  border-radius: 10px;
-  background: #fff8f6;
-  color: #9a3326;
-  padding: 0 9px;
+  border: 1px solid rgba(154, 47, 36, 0.2);
+  border-radius: 9px;
+  background: #ffffff;
+  color: var(--danger);
+  padding: 0 10px;
   font-size: 0.78rem;
-  font-weight: 720;
+  font-weight: 740;
+}
+
+.deleteButton:hover {
+  border-color: rgba(154, 47, 36, 0.34);
+  background: var(--danger-soft);
 }
 
 .bottomNav {
@@ -502,31 +651,36 @@ h3 {
   left: 14px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  width: min(calc(100% - 28px), 520px);
+  gap: 4px;
+  width: min(calc(100% - 28px), 560px);
   margin: 0 auto;
-  padding: 8px;
-  border: 1px solid rgba(78, 88, 79, 0.14);
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 16px 38px rgba(47, 54, 47, 0.14);
-  backdrop-filter: blur(20px);
+  padding: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--shadow-tight);
+  backdrop-filter: blur(18px);
 }
 
 .navButton {
-  min-height: 48px;
-  padding: 6px 6px;
+  min-height: 46px;
+  padding: 6px 5px;
   border: 0;
-  border-radius: 16px;
+  border-radius: 10px;
   background: transparent;
-  color: #717b72;
-  font-size: 0.76rem;
-  font-weight: 720;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 760;
   line-height: 1.1;
 }
 
+.navButton:hover {
+  background: #f2f2f2;
+  color: var(--ink-soft);
+}
+
 .navButton.active {
-  background: #26342d;
+  background: var(--ink);
   color: #ffffff;
 }
 
@@ -538,8 +692,25 @@ h3 {
 .field input:focus-visible,
 .field select:focus-visible,
 .secondaryButton:focus-visible {
-  outline: 3px solid rgba(38, 52, 45, 0.24);
+  outline: 3px solid rgba(0, 0, 0, 0.18);
   outline-offset: 2px;
+}
+
+@media (max-width: 420px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .categoryHeader,
+  .assetGroupHeader {
+    display: grid;
+    gap: 6px;
+  }
+
+  .categoryTotal,
+  .assetGroupHeader span {
+    text-align: left;
+  }
 }
 
 @media (min-width: 700px) {
@@ -548,11 +719,48 @@ h3 {
   }
 
   .appHeader {
-    padding-top: 42px;
+    padding-top: 46px;
+  }
+
+  .contentStack,
+  .dashboardStack {
+    gap: 16px;
+  }
+
+  h1 {
+    font-size: 3.1rem;
+  }
+
+  .capitalAmount {
+    font-size: 5.65rem;
+  }
+
+  .sectionAmount {
+    font-size: 3rem;
+  }
+
+  .summaryAmount {
+    font-size: 1.9rem;
+  }
+
+  .cryptoTitleBlock h1 {
+    font-size: 2.45rem;
+  }
+
+  .cryptoCapitalCard .sectionAmount {
+    font-size: 4.25rem;
+  }
+
+  .recordsPageHeader h1 {
+    font-size: 2.55rem;
   }
 }
 
 @media (min-width: 900px) {
+  .cryptoCapitalCard {
+    grid-column: 1 / -1;
+  }
+
   .mobileTable {
     overflow-x: visible;
   }
@@ -572,14 +780,20 @@ h3 {
 
   .mobileTableHeader {
     gap: 10px;
-    padding: 0 14px;
-    color: #768077;
-    font-size: 0.74rem;
-    font-weight: 760;
+    padding: 0 14px 4px;
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 780;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .mobileTableRow {
     gap: 10px;
+  }
+
+  .mobileTableRow:hover {
+    border-color: var(--line-strong);
   }
 
   .mobileTableRow span {
