@@ -36,6 +36,10 @@ button {
   margin: 0 auto;
 }
 
+.cryptoMain {
+  width: min(100%, 920px);
+}
+
 .appHeader {
   padding: 32px 2px 22px;
 }
@@ -78,6 +82,54 @@ h1 {
   padding: 28px;
 }
 
+.compactCapitalCard {
+  min-height: 132px;
+}
+
+.cryptoCapitalCard {
+  width: min(100%, 520px);
+  min-height: 178px;
+  align-content: stretch;
+  justify-self: center;
+  justify-items: stretch;
+  gap: 20px;
+  padding: 26px 24px;
+  text-align: left;
+}
+
+.cryptoTitleBlock {
+  display: grid;
+  gap: 2px;
+  justify-self: start;
+}
+
+.cryptoTitleBlock .eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+}
+
+.cryptoTitleBlock h1 {
+  font-size: 1.65rem;
+}
+
+.cryptoCapitalContent {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  align-self: center;
+  text-align: center;
+}
+
+.cryptoCapitalCard .cardLabel {
+  font-size: 1rem;
+}
+
+.cryptoCapitalCard .sectionAmount {
+  margin-top: 0;
+  font-size: clamp(3rem, 11vw, 4.6rem);
+  line-height: 0.95;
+}
+
 .softCard {
   padding: 22px;
 }
@@ -112,23 +164,227 @@ h1 {
   line-height: 1.55;
 }
 
+.formCard {
+  display: grid;
+  gap: 16px;
+}
+
+.cryptoFormCard {
+  width: min(100%, 520px);
+  justify-self: center;
+}
+
+.formHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+h2 {
+  margin: 0;
+  color: #1e2522;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  color: #687269;
+  font-size: 0.9rem;
+  font-weight: 680;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(78, 88, 79, 0.16);
+  border-radius: 12px;
+  background: #fbfaf7;
+  color: #1e2522;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 560;
+  padding: 0 13px;
+}
+
+.field input::placeholder {
+  color: #a0a79f;
+}
+
+.readonlyField {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px 14px;
+  border: 1px solid rgba(78, 88, 79, 0.12);
+  border-radius: 12px;
+  background: #f5f3ed;
+  color: #687269;
+  font-size: 0.9rem;
+  font-weight: 680;
+}
+
+.readonlyField strong {
+  color: #1e2522;
+  font-size: 1.05rem;
+}
+
+.formError {
+  margin: 0;
+  color: #9b332b;
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
 .buttonStack {
   display: grid;
   gap: 10px;
   margin-top: 16px;
 }
 
+.primaryButton,
 .secondaryButton {
   min-height: 48px;
   border: 1px solid rgba(78, 88, 79, 0.16);
   border-radius: 12px;
-  background: #f9f8f4;
   color: #1e2522;
   font-weight: 680;
 }
 
+.primaryButton {
+  background: #26342d;
+  color: #ffffff;
+}
+
+.secondaryButton {
+  background: #f9f8f4;
+}
+
+.compactButton {
+  min-height: 38px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  padding: 0 12px;
+}
+
+.primaryButton:active,
 .secondaryButton:active {
   transform: translateY(1px);
+}
+
+.recordsPage {
+  padding-top: 28px;
+}
+
+.recordsPageHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.recordsPageHeader h1 {
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
+}
+
+.deleteButton {
+  flex: 0 0 auto;
+  min-height: 38px;
+  border: 1px solid rgba(155, 51, 43, 0.2);
+  border-radius: 10px;
+  background: #fff8f6;
+  color: #9b332b;
+  font-size: 0.88rem;
+  font-weight: 720;
+  padding: 0 12px;
+}
+
+.assetGroupList {
+  display: grid;
+  gap: 14px;
+}
+
+.assetGroup {
+  display: grid;
+  gap: 16px;
+}
+
+.tableCard {
+  display: grid;
+}
+
+.assetGroupHeader {
+  display: grid;
+  gap: 5px;
+}
+
+.assetGroupHeader h3 {
+  margin: 0;
+  color: #1e2522;
+  font-size: 1.18rem;
+  line-height: 1.2;
+}
+
+.assetGroupHeader span {
+  color: #687269;
+  font-size: 0.92rem;
+  font-weight: 680;
+}
+
+.mobileTable {
+  display: grid;
+  gap: 10px;
+}
+
+.mobileTableHeader {
+  display: none;
+}
+
+.mobileTableRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(78, 88, 79, 0.12);
+  border-radius: 14px;
+  background: #fbfaf7;
+}
+
+.mobileTableRow div {
+  min-width: 0;
+}
+
+.mobileTableRow span {
+  display: block;
+  color: #768077;
+  font-size: 0.74rem;
+  font-weight: 740;
+  line-height: 1.2;
+}
+
+.mobileTableRow strong {
+  display: block;
+  margin-top: 5px;
+  color: #1e2522;
+  font-size: 0.92rem;
+  font-weight: 680;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+
+.mobileTableNote,
+.mobileTableAction {
+  grid-column: 1 / -1;
+}
+
+.mobileTableAction {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .bottomNav {
@@ -167,6 +423,10 @@ h1 {
 }
 
 .navButton:focus-visible,
+.primaryButton:focus-visible,
+.deleteButton:focus-visible,
+.field input:focus-visible,
+.field select:focus-visible,
 .secondaryButton:focus-visible {
   outline: 3px solid rgba(38, 52, 45, 0.24);
   outline-offset: 2px;
@@ -179,5 +439,49 @@ h1 {
 
   .appHeader {
     padding-top: 42px;
+  }
+}
+
+@media (min-width: 900px) {
+  .mobileTable {
+    overflow-x: visible;
+  }
+
+  .mobileTableHeader,
+  .mobileTableRow {
+    display: grid;
+    grid-template-columns: 92px 70px 108px 114px 130px minmax(96px, 1fr) 82px;
+    min-width: 0;
+    align-items: center;
+  }
+
+  .rmbTable .mobileTableHeader,
+  .rmbTable .mobileTableRow {
+    grid-template-columns: 104px 116px 128px 128px minmax(112px, 1fr) 82px;
+  }
+
+  .mobileTableHeader {
+    gap: 10px;
+    padding: 0 14px;
+    color: #768077;
+    font-size: 0.74rem;
+    font-weight: 760;
+  }
+
+  .mobileTableRow {
+    gap: 10px;
+  }
+
+  .mobileTableRow span {
+    display: none;
+  }
+
+  .mobileTableRow strong {
+    margin-top: 0;
+  }
+
+  .mobileTableNote,
+  .mobileTableAction {
+    grid-column: auto;
   }
 }
