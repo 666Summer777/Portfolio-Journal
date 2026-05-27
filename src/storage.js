@@ -1,10 +1,11 @@
-const STORAGE_KEY = 'portfolioJournalData';
+﻿const STORAGE_KEY = 'portfolioJournalData';
 
 export const defaultPortfolioData = {
   version: 1,
   stocksAndFunds: [],
   crypto: {
     deposits: [],
+    rmbToUsdRecords: [],
     trades: [],
   },
   settings: {},
@@ -16,6 +17,7 @@ function getDefaultPortfolioData() {
     stocksAndFunds: [],
     crypto: {
       deposits: [],
+      rmbToUsdRecords: [],
       trades: [],
     },
     settings: {},
@@ -37,6 +39,9 @@ function normalizePortfolioData(data) {
       ...baseData.crypto,
       ...parsedCrypto,
       deposits: Array.isArray(parsedCrypto.deposits) ? parsedCrypto.deposits : baseData.crypto.deposits,
+      rmbToUsdRecords: Array.isArray(parsedCrypto.rmbToUsdRecords)
+        ? parsedCrypto.rmbToUsdRecords
+        : baseData.crypto.rmbToUsdRecords,
       trades: Array.isArray(parsedCrypto.trades) ? parsedCrypto.trades : baseData.crypto.trades,
     },
     settings:
@@ -112,8 +117,125 @@ export function getStocksAndFundsTotal(data) {
   }, 0);
 }
 
+export function addRmbToUsdRecord(record) {
+  const data = getAppData();
+  const nextRecord = {
+    id: createRecordId(),
+    date: record.date,
+    rmbAmount: Number(record.rmbAmount),
+    exchangeRate: Number(record.exchangeRate),
+    usdReceived: Number(record.usdReceived),
+    note: record.note || '',
+    createdAt: new Date().toISOString(),
+  };
+
+  return saveAppData({
+    ...data,
+    crypto: {
+      ...data.crypto,
+      rmbToUsdRecords: [nextRecord, ...data.crypto.rmbToUsdRecords],
+    },
+  });
+}
+
+export function deleteRmbToUsdRecord(recordId) {
+  const data = getAppData();
+
+  return saveAppData({
+    ...data,
+    crypto: {
+      ...data.crypto,
+      rmbToUsdRecords: data.crypto.rmbToUsdRecords.filter((record) => record.id !== recordId),
+    },
+  });
+}
+
+export function addCryptoTrade(record) {
+  const data = getAppData();
+  const nextRecord = {
+    id: createRecordId(),
+    date: record.date,
+    action: record.action,
+    asset: record.asset,
+    usdAmount: Number(record.usdAmount),
+    fee: Number(record.fee || 0),
+    quantity: Number(record.quantity),
+    note: record.note || '',
+    createdAt: new Date().toISOString(),
+  };
+
+  return saveAppData({
+    ...data,
+    crypto: {
+      ...data.crypto,
+      trades: [nextRecord, ...data.crypto.trades],
+    },
+  });
+}
+
+export function deleteCryptoTrade(recordId) {
+  const data = getAppData();
+
+  return saveAppData({
+    ...data,
+    crypto: {
+      ...data.crypto,
+      trades: data.crypto.trades.filter((record) => record.id !== recordId),
+    },
+  });
+}
+
+export function getCryptoCapitalIn(data = getAppData()) {
+  const currentData = normalizePortfolioData(data);
+
+  return currentData.crypto.rmbToUsdRecords.reduce((sum, record) => {
+    const amount = Number(record.rmbAmount);
+    return Number.isFinite(amount) ? sum + amount : sum;
+  }, 0);
+}
+
 export function getTotalCapitalIn(data) {
-  return getStocksAndFundsTotal(data);
+  return getStocksAndFundsTotal(data) + getCryptoCapitalIn(data);
+}
+
+export function getCryptoTradesGroupedByAsset(trades = []) {
+  return trades.reduce((groups, trade) => {
+    const asset = String(trade.asset || '').trim().toUpperCase();
+
+    if (!asset) {
+      return groups;
+    }
+
+    if (!groups[asset]) {
+      groups[asset] = [];
+    }
+
+    groups[asset].push(trade);
+    groups[asset].sort(compareTradesByTime);
+
+    return groups;
+  }, {});
+}
+
+export function getCryptoAssetNetQuantity(trades = []) {
+  return trades.reduce((total, trade) => {
+    const quantity = Number(trade.quantity);
+    const fee = Number(trade.fee || 0);
+
+    if (!Number.isFinite(quantity) || !Number.isFinite(fee)) {
+      return total;
+    }
+
+    if (trade.action === 'Buy') {
+      return total + quantity - fee;
+    }
+
+    if (trade.action === 'Sell') {
+      return total - quantity - fee;
+    }
+
+    return total;
+  }, 0);
 }
 
 function createStocksAndFundsRecord(recordInput) {
@@ -133,4 +255,14 @@ function createRecordId() {
   }
 
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function compareTradesByTime(a, b) {
+  const dateCompare = String(a.date || '').localeCompare(String(b.date || ''));
+
+  if (dateCompare !== 0) {
+    return dateCompare;
+  }
+
+  return String(a.createdAt || '').localeCompare(String(b.createdAt || ''));
 }
