@@ -26,6 +26,11 @@ button {
   font: inherit;
 }
 
+input,
+select {
+  font: inherit;
+}
+
 .appShell {
   min-height: 100vh;
   padding: env(safe-area-inset-top) 18px calc(94px + env(safe-area-inset-bottom));
@@ -55,6 +60,22 @@ h1 {
   font-size: 2rem;
   font-weight: 760;
   line-height: 1.08;
+}
+
+h2 {
+  margin: 0;
+  color: #1e2522;
+  font-size: 1.08rem;
+  font-weight: 760;
+  line-height: 1.2;
+}
+
+h3 {
+  margin: 5px 0 0;
+  color: #1e2522;
+  font-size: 1rem;
+  font-weight: 730;
+  line-height: 1.25;
 }
 
 .contentStack {
@@ -118,16 +139,163 @@ h1 {
   margin-top: 16px;
 }
 
+.recordForm {
+  display: grid;
+  gap: 14px;
+}
+
+.fieldGroup {
+  display: grid;
+  gap: 7px;
+  color: #4f5a52;
+  font-size: 0.9rem;
+  font-weight: 680;
+}
+
+.fieldGroup input,
+.fieldGroup select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(78, 88, 79, 0.16);
+  border-radius: 12px;
+  background: #fbfaf7;
+  color: #1e2522;
+  padding: 0 13px;
+  font-size: 1rem;
+}
+
+.fieldGroup input::placeholder {
+  color: #9aa398;
+}
+
+.fieldGroup input:focus,
+.fieldGroup select:focus {
+  outline: 3px solid rgba(38, 52, 45, 0.18);
+  border-color: rgba(38, 52, 45, 0.34);
+}
+
+.formError {
+  margin: 0;
+  color: #9a3326;
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.primaryButton,
 .secondaryButton {
   min-height: 48px;
   border: 1px solid rgba(78, 88, 79, 0.16);
   border-radius: 12px;
-  background: #f9f8f4;
-  color: #1e2522;
   font-weight: 680;
 }
 
+.primaryButton {
+  background: #26342d;
+  color: #ffffff;
+}
+
+.secondaryButton {
+  background: #f9f8f4;
+  color: #1e2522;
+}
+
+.primaryButton:active,
 .secondaryButton:active {
+  transform: translateY(1px);
+}
+
+.recordsSection {
+  display: grid;
+  gap: 12px;
+}
+
+.categoryGroups {
+  display: grid;
+  gap: 12px;
+}
+
+.categoryGroup {
+  display: grid;
+  gap: 14px;
+}
+
+.categoryHeader {
+  display: grid;
+  gap: 6px;
+}
+
+.categoryHeader h3 {
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.categoryTotal {
+  color: #687269;
+  font-size: 0.94rem;
+  font-weight: 680;
+}
+
+.purchaseTable {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid rgba(78, 88, 79, 0.12);
+  border-radius: 14px;
+  background: #fbfaf7;
+}
+
+.purchaseHeader,
+.purchaseRow {
+  display: grid;
+  grid-template-columns: 4.9rem 4rem minmax(0, 1fr) 3.7rem;
+  gap: 6px;
+  align-items: center;
+  padding: 11px 10px;
+}
+
+.purchaseHeader {
+  background: #f2f0ea;
+  color: #687269;
+  font-size: 0.68rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.purchaseRow {
+  color: #1e2522;
+  font-size: 0.78rem;
+}
+
+.purchaseRow + .purchaseRow {
+  border-top: 1px solid rgba(78, 88, 79, 0.1);
+}
+
+.purchaseCell {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.purchaseNote {
+  color: #687269;
+}
+
+.purchaseAction {
+  justify-self: end;
+}
+
+.deleteButton {
+  min-height: 34px;
+  border: 1px solid rgba(154, 51, 38, 0.18);
+  border-radius: 10px;
+  background: #fff8f6;
+  color: #9a3326;
+  padding: 0 9px;
+  font-size: 0.78rem;
+  font-weight: 720;
+}
+
+.deleteButton:active {
   transform: translateY(1px);
 }
 
@@ -167,6 +335,8 @@ h1 {
 }
 
 .navButton:focus-visible,
+.primaryButton:focus-visible,
+.deleteButton:focus-visible,
 .secondaryButton:focus-visible {
   outline: 3px solid rgba(38, 52, 45, 0.24);
   outline-offset: 2px;
