@@ -488,12 +488,12 @@ function CryptoTradeForm({ onDataChange, onViewTrades }) {
   const [action, setAction] = useState('Buy');
   const [assetChoice, setAssetChoice] = useState('BTC');
   const [customAsset, setCustomAsset] = useState('');
-  const [usdAmount, setUsdAmount] = useState('');
+  const [price, setPrice] = useState('');
   const [fee, setFee] = useState('');
   const [quantity, setQuantity] = useState('');
   const [note, setNote] = useState('');
   const [error, setError] = useState('');
-  const numericUsdAmount = Number(usdAmount);
+  const numericPrice = Number(price);
   const numericFee = fee === '' ? 0 : Number(fee);
   const numericQuantity = Number(quantity);
 
@@ -512,8 +512,8 @@ function CryptoTradeForm({ onDataChange, onViewTrades }) {
       return;
     }
 
-    if (!Number.isFinite(numericUsdAmount) || numericUsdAmount <= 0) {
-      setError('USD Amount must be greater than 0.');
+    if (!Number.isFinite(numericPrice) || numericPrice <= 0) {
+      setError('Price must be greater than 0.');
       return;
     }
 
@@ -531,14 +531,15 @@ function CryptoTradeForm({ onDataChange, onViewTrades }) {
       date,
       action,
       asset,
-      usdAmount: numericUsdAmount,
+      usdAmount: numericPrice,
       fee: numericFee,
+      feeCurrency: getDefaultFeeCurrency(action, asset),
       quantity: numericQuantity,
       note: note.trim(),
     });
 
     onDataChange(nextData);
-    setUsdAmount('');
+    setPrice('');
     setFee('');
     setQuantity('');
     setNote('');
@@ -594,15 +595,15 @@ function CryptoTradeForm({ onDataChange, onViewTrades }) {
       )}
 
       <label className="field">
-        <span>USD Amount</span>
+        <span>Price</span>
         <input
           type="number"
           min="0"
           step="0.01"
-          value={usdAmount}
+          value={price}
           required
           inputMode="decimal"
-          onChange={(event) => setUsdAmount(event.target.value)}
+          onChange={(event) => setPrice(event.target.value)}
         />
       </label>
 
@@ -758,7 +759,7 @@ function AssetTradeGroup({ asset, records, onDataChange }) {
         <div className="mobileTableHeader" role="row">
           <span role="columnheader">Date</span>
           <span role="columnheader">Action</span>
-          <span role="columnheader">USD Amount</span>
+          <span role="columnheader">Price</span>
           <span role="columnheader">Fee</span>
           <span role="columnheader">Quantity</span>
           <span role="columnheader">Note</span>
@@ -776,14 +777,12 @@ function AssetTradeGroup({ asset, records, onDataChange }) {
               <strong>{record.action}</strong>
             </div>
             <div>
-              <span>USD Amount</span>
+              <span>Price</span>
               <strong>{formatUsd(record.usdAmount)}</strong>
             </div>
             <div>
               <span>Fee</span>
-              <strong>
-                {formatCryptoAmount(record.fee)} {asset}
-              </strong>
+              <strong>{formatTradeFee(record, asset)}</strong>
             </div>
             <div>
               <span>Quantity</span>
@@ -827,6 +826,24 @@ function handleDeleteTrade(recordId, onDataChange) {
   onDataChange(deleteCryptoTrade(recordId));
 }
 
+function getDefaultFeeCurrency(action, asset) {
+  return action === 'Sell' ? 'USD' : asset;
+}
+
+function getTradeFeeCurrency(record, asset) {
+  return record.feeCurrency || getDefaultFeeCurrency(record.action, asset);
+}
+
+function formatTradeFee(record, asset) {
+  const feeCurrency = getTradeFeeCurrency(record, asset);
+
+  if (feeCurrency === 'USD') {
+    return formatUsd(record.fee);
+  }
+
+  return `${formatCryptoAmount(record.fee)} ${feeCurrency}`;
+}
+
 function SettingsBackup({ data, onDataImport }) {
   const fileInputRef = useRef(null);
   const [backupMessage, setBackupMessage] = useState('');
@@ -848,6 +865,11 @@ function SettingsBackup({ data, onDataImport }) {
     const file = event.target.files?.[0];
 
     if (!file) {
+      return;
+    }
+
+    if (!window.confirm('Importing this JSON backup will replace your current portfolio data. Continue?')) {
+      event.target.value = '';
       return;
     }
 
@@ -937,8 +959,9 @@ function convertPortfolioDataToCsv(data) {
       'rmbAmount',
       'exchangeRate',
       'usdReceived',
-      'usdAmount',
+      'price',
       'fee',
+      'feeCurrency',
       'quantity',
       'note',
       'createdAt',
@@ -954,6 +977,7 @@ function convertPortfolioDataToCsv(data) {
       '',
       '',
       record.amount,
+      '',
       '',
       '',
       '',
@@ -980,6 +1004,7 @@ function convertPortfolioDataToCsv(data) {
       '',
       '',
       '',
+      '',
       record.note,
       record.createdAt,
     ]);
@@ -999,6 +1024,7 @@ function convertPortfolioDataToCsv(data) {
       '',
       record.usdAmount,
       record.fee,
+      getTradeFeeCurrency(record, record.asset),
       record.quantity,
       record.note,
       record.createdAt,
@@ -1107,7 +1133,7 @@ function formatDisplayDate(value) {
 
 function formatCryptoAmount(value) {
   return new Intl.NumberFormat('en-US', {
-    maximumFractionDigits: 8,
+    maximumFractionDigits: 10,
   }).format(value || 0);
 }
 

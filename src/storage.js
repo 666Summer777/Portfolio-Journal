@@ -159,6 +159,7 @@ export function addCryptoTrade(record) {
     asset: record.asset,
     usdAmount: Number(record.usdAmount),
     fee: Number(record.fee || 0),
+    feeCurrency: record.feeCurrency || getDefaultTradeFeeCurrency(record.action, record.asset),
     quantity: Number(record.quantity),
     note: record.note || '',
     createdAt: new Date().toISOString(),
@@ -221,21 +222,36 @@ export function getCryptoAssetNetQuantity(trades = []) {
   return trades.reduce((total, trade) => {
     const quantity = Number(trade.quantity);
     const fee = Number(trade.fee || 0);
+    const feeCurrency = getTradeFeeCurrency(trade);
+    const asset = String(trade.asset || '').trim().toUpperCase();
+    const assetFee = feeCurrency === asset ? fee : 0;
 
     if (!Number.isFinite(quantity) || !Number.isFinite(fee)) {
       return total;
     }
 
     if (trade.action === 'Buy') {
-      return total + quantity - fee;
+      return total + quantity - assetFee;
     }
 
     if (trade.action === 'Sell') {
-      return total - quantity - fee;
+      return total - quantity - assetFee;
     }
 
     return total;
   }, 0);
+}
+
+function getDefaultTradeFeeCurrency(action, asset) {
+  return action === 'Sell' ? 'USD' : String(asset || '').trim().toUpperCase();
+}
+
+function getTradeFeeCurrency(trade) {
+  return String(
+    trade.feeCurrency || getDefaultTradeFeeCurrency(trade.action, trade.asset),
+  )
+    .trim()
+    .toUpperCase();
 }
 
 function createStocksAndFundsRecord(recordInput) {
