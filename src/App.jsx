@@ -91,6 +91,26 @@ function getPageTitle(pageId) {
   return 'Dashboard';
 }
 
+function DateField({ value, onChange }) {
+  const displayValue = value ? formatDisplayDate(value) : 'Select date';
+
+  return (
+    <span className="dateInputShell">
+      <span className={value ? 'dateInputValue' : 'dateInputValue placeholderValue'}>
+        {displayValue}
+      </span>
+      <input
+        className="dateInputControl"
+        type="date"
+        value={value}
+        required
+        aria-label="Date"
+        onChange={(event) => onChange(event.target.value)}
+      />
+    </span>
+  );
+}
+
 function Dashboard({ data }) {
   const total = getTotalCapitalIn(data);
   const stocksAndFundsTotal = getStocksAndFundsTotal(data);
@@ -199,12 +219,7 @@ function StocksAndFunds({ data, onAddRecord, onDeleteRecord }) {
 
         <label className="fieldGroup">
           <span>Date</span>
-          <input
-            type="date"
-            value={formData.date}
-            required
-            onChange={(event) => updateField('date', event.target.value)}
-          />
+          <DateField value={formData.date} onChange={(date) => updateField('date', date)} />
         </label>
 
         <label className="fieldGroup">
@@ -411,7 +426,7 @@ function RmbToUsdForm({ onDataChange, onViewRecords }) {
 
       <label className="field">
         <span>Date</span>
-        <input type="date" value={date} required onChange={(event) => setDate(event.target.value)} />
+        <DateField value={date} onChange={setDate} />
       </label>
 
       <label className="field">
@@ -538,7 +553,7 @@ function CryptoTradeForm({ onDataChange, onViewTrades }) {
 
       <label className="field">
         <span>Date</span>
-        <input type="date" value={date} required onChange={(event) => setDate(event.target.value)} />
+        <DateField value={date} onChange={setDate} />
       </label>
 
       <label className="field">
@@ -891,6 +906,20 @@ function formatNumber(value, maximumFractionDigits) {
   return new Intl.NumberFormat('en-US', {
     maximumFractionDigits,
   }).format(value || 0);
+}
+
+function formatDisplayDate(value) {
+  const [year, month, day] = String(value).split('-').map(Number);
+
+  if (!year || !month || !day) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(new Date(year, month - 1, day));
 }
 
 function formatCryptoAmount(value) {
