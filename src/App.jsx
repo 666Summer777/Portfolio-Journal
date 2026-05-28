@@ -612,7 +612,7 @@ function CryptoTradeForm({ onDataChange, onViewTrades }) {
         <input
           type="number"
           min="0"
-          step="0.00000001"
+          step="0.0000000001"
           value={fee}
           inputMode="decimal"
           placeholder="0"
@@ -838,7 +838,7 @@ function formatTradeFee(record, asset) {
   const feeCurrency = getTradeFeeCurrency(record, asset);
 
   if (feeCurrency === 'USD') {
-    return formatUsd(record.fee);
+    return formatUsdFee(record.fee);
   }
 
   return `${formatCryptoAmount(record.fee)} ${feeCurrency}`;
@@ -1108,6 +1108,14 @@ function formatUsd(value) {
     style: 'currency',
     currency: 'USD',
     maximumFractionDigits: 2,
+  }).format(value || 0);
+}
+
+function formatUsdFee(value) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 10,
   }).format(value || 0);
 }
 

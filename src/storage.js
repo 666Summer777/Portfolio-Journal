@@ -274,11 +274,11 @@ function createRecordId() {
 }
 
 function compareTradesByTime(a, b) {
-  const dateCompare = String(a.date || '').localeCompare(String(b.date || ''));
+  const dateCompare = String(b.date || '').localeCompare(String(a.date || ''));
 
   if (dateCompare !== 0) {
     return dateCompare;
   }
 
-  return String(a.createdAt || '').localeCompare(String(b.createdAt || ''));
+  return String(b.createdAt || '').localeCompare(String(a.createdAt || ''));
 }
