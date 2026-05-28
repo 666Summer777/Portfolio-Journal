@@ -271,6 +271,22 @@ h3 {
   margin-top: 16px;
 }
 
+.formHint {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .recordForm,
 .formCard {
   display: grid;

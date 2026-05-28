@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+﻿import { useRef, useState } from 'react';
 import {
   addCryptoTrade,
   addRmbToUsdRecord,
@@ -12,6 +12,7 @@ import {
   getStocksAndFundsTotal,
   getTotalCapitalIn,
   loadPortfolioData,
+  savePortfolioData,
 } from './storage';
 
 const pages = [
@@ -55,7 +56,9 @@ function App() {
         {activePage === 'crypto' && (
           <Crypto data={portfolioData.crypto} onDataChange={setPortfolioData} />
         )}
-        {activePage === 'settings' && <SettingsBackup />}
+        {activePage === 'settings' && (
+          <SettingsBackup data={portfolioData} onDataImport={setPortfolioData} />
+        )}
       </main>
 
       <nav className="bottomNav" aria-label="Primary navigation">
@@ -824,25 +827,195 @@ function handleDeleteTrade(recordId, onDataChange) {
   onDataChange(deleteCryptoTrade(recordId));
 }
 
-function SettingsBackup() {
+function SettingsBackup({ data, onDataImport }) {
+  const fileInputRef = useRef(null);
+  const [backupMessage, setBackupMessage] = useState('');
+
+  function handleExportJson() {
+    downloadTextFile(
+      `portfolio-journal-backup-${getTodayStamp()}.json`,
+      JSON.stringify(data, null, 2),
+      'application/json',
+    );
+    setBackupMessage('JSON backup exported.');
+  }
+
+  function handleImportClick() {
+    fileInputRef.current?.click();
+  }
+
+  function handleImportJson(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      try {
+        const parsedData = JSON.parse(String(reader.result || '{}'));
+        const savedData = savePortfolioData(parsedData);
+        onDataImport(savedData);
+        setBackupMessage('JSON backup imported.');
+      } catch {
+        setBackupMessage('Import failed. Please choose a valid JSON backup file.');
+      } finally {
+        event.target.value = '';
+      }
+    };
+
+    reader.onerror = () => {
+      setBackupMessage('Import failed. Please try another JSON file.');
+      event.target.value = '';
+    };
+
+    reader.readAsText(file);
+  }
+
+  function handleExportCsv() {
+    downloadTextFile(
+      `portfolio-journal-backup-${getTodayStamp()}.csv`,
+      convertPortfolioDataToCsv(data),
+      'text/csv',
+    );
+    setBackupMessage('CSV backup exported.');
+  }
+
   return (
     <section className="contentStack">
       <div className="softCard">
         <span className="cardLabel">Backup</span>
         <div className="buttonStack" aria-label="Backup actions">
-          <button type="button" className="secondaryButton">
+          <button type="button" className="secondaryButton" onClick={handleExportJson}>
             Export JSON
           </button>
-          <button type="button" className="secondaryButton">
+          <button type="button" className="secondaryButton" onClick={handleImportClick}>
             Import JSON
           </button>
-          <button type="button" className="secondaryButton">
+          <button type="button" className="secondaryButton" onClick={handleExportCsv}>
             Export CSV
           </button>
         </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/json,.json"
+          className="visuallyHidden"
+          onChange={handleImportJson}
+        />
+        {backupMessage && <p className="formHint">{backupMessage}</p>}
       </div>
     </section>
   );
+}
+
+function downloadTextFile(fileName, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function convertPortfolioDataToCsv(data) {
+  const rows = [
+    [
+      'section',
+      'id',
+      'date',
+      'category',
+      'action',
+      'asset',
+      'amount',
+      'rmbAmount',
+      'exchangeRate',
+      'usdReceived',
+      'usdAmount',
+      'fee',
+      'quantity',
+      'note',
+      'createdAt',
+    ],
+  ];
+
+  data.stocksAndFunds.forEach((record) => {
+    rows.push([
+      'stocksAndFunds',
+      record.id,
+      record.date,
+      record.category,
+      '',
+      '',
+      record.amount,
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      record.note,
+      record.createdAt,
+    ]);
+  });
+
+  data.crypto.rmbToUsdRecords.forEach((record) => {
+    rows.push([
+      'rmbToUsdRecords',
+      record.id,
+      record.date,
+      '',
+      '',
+      '',
+      '',
+      record.rmbAmount,
+      record.exchangeRate,
+      record.usdReceived,
+      '',
+      '',
+      '',
+      record.note,
+      record.createdAt,
+    ]);
+  });
+
+  data.crypto.trades.forEach((record) => {
+    rows.push([
+      'cryptoTrades',
+      record.id,
+      record.date,
+      '',
+      record.action,
+      record.asset,
+      '',
+      '',
+      '',
+      '',
+      record.usdAmount,
+      record.fee,
+      record.quantity,
+      record.note,
+      record.createdAt,
+    ]);
+  });
+
+  return rows.map((row) => row.map(formatCsvCell).join(',')).join('\n');
+}
+
+function formatCsvCell(value) {
+  const stringValue = value == null ? '' : String(value);
+
+  return `"${stringValue.replaceAll('"', '""')}"`;
+}
+
+function getTodayStamp() {
+  return new Date().toISOString().slice(0, 10);
 }
 
 function groupStocksAndFundsRecords(records) {
@@ -868,7 +1041,17 @@ function groupStocksAndFundsRecords(records) {
       ...group,
       records: [...group.records].sort(comparePurchaseRecords),
     }))
-    .sort((first, second) => first.category.localeCompare(second.category));
+    .sort(compareCategoryGroups);
+}
+
+function compareCategoryGroups(first, second) {
+  const totalComparison = second.total - first.total;
+
+  if (totalComparison !== 0) {
+    return totalComparison;
+  }
+
+  return first.category.localeCompare(second.category);
 }
 
 function comparePurchaseRecords(first, second) {
