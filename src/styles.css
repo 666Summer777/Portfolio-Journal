@@ -298,6 +298,7 @@ h3 {
 .field {
   display: grid;
   gap: 8px;
+  min-width: 0;
   color: var(--muted);
   font-size: 0.82rem;
   font-weight: 720;
@@ -313,6 +314,8 @@ h3 {
 .field input,
 .field select {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 50px;
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -325,6 +328,21 @@ h3 {
     border-color 160ms ease,
     background 160ms ease,
     box-shadow 160ms ease;
+}
+
+.fieldGroup input[type="date"],
+.field input[type="date"] {
+  height: 50px;
+  line-height: 50px;
+  overflow: hidden;
+  padding: 0 13px;
+  text-align: left;
+}
+
+.fieldGroup input[type="date"]::-webkit-date-and-time-value,
+.field input[type="date"]::-webkit-date-and-time-value {
+  margin: 0;
+  text-align: left;
 }
 
 .fieldGroup input::placeholder,
